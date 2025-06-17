@@ -36,11 +36,17 @@ class GameObject:
         self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.body_color = None
 
-    def draw(self):
-        """Отрисовка объекта на экране."""
-        rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
+    def draw_cell(self, position):
+        """Отрисовка одной ячейки объекта."""
+        rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
+    def draw(self):
+        """Абстрактный метод отрисовки объекта."""
+        raise NotImplementedError(
+            'Метод draw() должен быть реализован в дочернем классе'
+        )
 
 
 class Apple(GameObject):
@@ -108,9 +114,7 @@ class Snake(GameObject):
     def draw(self):
         """Отрисовка змейки на экране."""
         # Отрисовка головы
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
+        self.draw_cell(self.get_head_position())
 
         # Отрисовка тела
         for position in self.positions[1:-1]:
